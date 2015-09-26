@@ -8,23 +8,25 @@
 
 int main(int argc, char *argv[])
 {
-    md5_hash_t checksum;
+    char *fpath = "file";
+
+    md5_hash_t hash;
 
     FILE *fp;
     {
-        fp = fopen("file", "r");
+        fp = fopen(fpath, "r");
         if (fp == NULL) exit(EXIT_FAILURE_fopen_failed);
         
-        int result = md5_rhash(fp, &checksum);
+        int result = md5_rhash(fp, &hash);
         if (result != 0) exit(result);
     }
     if (fclose(fp) != 0) exit(EXIT_FAILURE_fclose_failed);
 
-    char hex_buffer[128+1];
-    hexify(checksum.bytes, sizeof(checksum.bytes), hex_buffer, sizeof(hex_buffer));
+    char hex_buffer[32+1];
+    hexify(hash.bytes, sizeof(hash.bytes), hex_buffer, sizeof(hex_buffer));
     printf("bytes: %s\n", hex_buffer);
 
-    printf("hex: %s\n", checksum.hex);
+    printf("hex: %s\n", hash.hex);
 
     return EXIT_SUCCESS;
 }
