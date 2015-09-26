@@ -5,6 +5,21 @@
 #include "hexify.h"
 #include "md5_rhash.h"
 #include "errors.h"
+#include <sys/stat.h>
+
+int fsize(FILE *fp, off_t *size)
+{
+    struct stat sb;
+
+    int fd = fileno(fp);
+    if (fd == -1) return EXIT_FAILURE_fileno_failed;
+
+    int result = fstat(fd, &sb); 
+    if (result != 0) return EXIT_FAILURE_fstat_failed;
+
+    *size = sb.st_size;
+    return 0;
+}
 
 int main(int argc, char *argv[])
 {
@@ -14,11 +29,28 @@ int main(int argc, char *argv[])
 
     FILE *fp;
     {
+        // open the file
         fp = fopen(fpath, "r");
         if (fp == NULL) exit(EXIT_FAILURE_fopen_failed);
         
+        // generate an md5 hash of the file
         int result = md5_rhash(fp, &hash);
         if (result != 0) exit(result);
+
+        // read the size of the file
+        off_t size;
+        result = fsize(fp, &size);
+        if (result != 0) exit(result);
+        printf("file size: %i\n", size);
+
+        // calculate number of QR codes needed
+        int chunk_size = 1091 - 16 - 2;
+        int num_chunks = size / chunk_size;
+        if (size % chunk_size) num_chunks++;
+
+        // create the chunks to send to libqrencode
+        rewind(fp);
+
     }
     if (fclose(fp) != 0) exit(EXIT_FAILURE_fclose_failed);
 

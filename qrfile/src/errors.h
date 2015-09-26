@@ -1,6 +1,8 @@
 enum
 {
     EXIT_FAILURE_fopen_failed = 10,
+    EXIT_FAILURE_fileno_failed,
+    EXIT_FAILURE_fstat_failed,
     EXIT_FAILURE_fread_failed,
     EXIT_FAILURE_fclose_failed,
     EXIT_FAILURE_rhash_init_failed = 20,
