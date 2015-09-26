@@ -4,22 +4,9 @@
 #include <rhash.h>
 #include "hexify.h"
 #include "md5_rhash.h"
+#include "fsize.h"
 #include "errors.h"
-#include <sys/stat.h>
 
-int fsize(FILE *fp, off_t *size)
-{
-    struct stat sb;
-
-    int fd = fileno(fp);
-    if (fd == -1) return EXIT_FAILURE_fileno_failed;
-
-    int result = fstat(fd, &sb); 
-    if (result != 0) return EXIT_FAILURE_fstat_failed;
-
-    *size = sb.st_size;
-    return 0;
-}
 
 int main(int argc, char *argv[])
 {
