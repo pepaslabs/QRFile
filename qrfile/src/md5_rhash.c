@@ -1,28 +1,9 @@
 #include <stdlib.h> // EXIT_SUCCESS, etc
-#include <stdio.h> // fopen(), etc
 #include <stdint.h>
 #include <rhash.h>
 #include "hexify.h"
-
-struct _md5_hash_t
-{
-    uint8_t bytes[16];
-    char hex[32+1];
-};
-
-typedef struct _md5_hash_t md5_hash_t;
-
-enum
-{
-    EXIT_FAILURE_fopen_failed = 10,
-    EXIT_FAILURE_fread_failed,
-    EXIT_FAILURE_fclose_failed,
-    EXIT_FAILURE_rhash_init_failed = 20,
-    EXIT_FAILURE_rhash_print_bad_length,
-    EXIT_FAILURE_rhash_print_bad_length2
-}; 
-
-#define MD5_FREAD_SIZE 4096
+#include "md5_rhash.h"
+#include "errors.h"
 
 /* md5_rhash()
  * - fp should be a FILE* which has already been fopen()'ed
@@ -67,27 +48,3 @@ int md5_rhash(FILE *fp, md5_hash_t *md5)
 
     return 0;
 }
-
-int main(int argc, char *argv[])
-{
-    md5_hash_t checksum;
-
-    FILE *fp;
-    {
-        fp = fopen("file", "r");
-        if (fp == NULL) exit(EXIT_FAILURE_fopen_failed);
-        
-        int result = md5_rhash(fp, &checksum);
-        if (result != 0) exit(result);
-    }
-    if (fclose(fp) != 0) exit(EXIT_FAILURE_fclose_failed);
-
-    char hex_buffer[128+1];
-    hexify(checksum.bytes, sizeof(checksum.bytes), hex_buffer, sizeof(hex_buffer));
-    printf("bytes: %s\n", hex_buffer);
-
-    printf("hex: %s\n", checksum.hex);
-
-    return EXIT_SUCCESS;
-}
-
