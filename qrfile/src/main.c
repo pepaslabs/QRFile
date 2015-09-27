@@ -7,6 +7,20 @@
 #include "fsize.h"
 #include "errors.h"
 
+struct _qrchunk_info_23L_t
+{
+    uint8_t document_id[16];
+    uint16_t sequence_number;
+    uint8_t file_data[1073];
+};
+typedef struct _qrchunk_info_23L_t qrchunk_info_23L_t;
+
+union _qrchunk_23L_t
+{
+    qrchunk_info_23L_t info;
+    uint8_t bytes[sizeof(qrchunk_info_23L_t)];
+};
+typedef union _qrchunk_23L_t qrchunk_23L_t;
 
 int main(int argc, char *argv[])
 {
@@ -30,10 +44,12 @@ int main(int argc, char *argv[])
         if (result != 0) exit(result);
         printf("file size: %i\n", size);
 
+        qrchunk_23L_t chunk;
         // calculate number of QR codes needed
-        int chunk_size = 1091 - 16 - 2;
+        int chunk_size = sizeof(chunk.info.file_data);
         int num_chunks = size / chunk_size;
         if (size % chunk_size) num_chunks++;
+        printf("num chunks: %i\n", num_chunks);
 
         // create the chunks to send to libqrencode
         rewind(fp);
