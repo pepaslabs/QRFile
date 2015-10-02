@@ -48,12 +48,14 @@ int make_next_chunk(FILE *fp, qrchunk_descriptor_23L_t *qr)
 
 int main(int argc, char *argv[])
 {
+    if (argc < 2) exit(EXIT_FAILURE_usage_no_file_argument_given);
+
     FILE *fp;
     {
         int result = 0;
 
         // open the file
-        char *fpath = "file";
+        char *fpath = argv[1];
         fp = fopen(fpath, "r");
         if (fp == NULL) exit(EXIT_FAILURE_fopen_failed);
         
