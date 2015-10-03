@@ -38,7 +38,7 @@ int make_next_chunk(FILE *fp, qrchunk_descriptor_23L_t *qr)
     if (ferror(fp)) return EXIT_FAILURE_fread_failed2;
     if (bytes_read == 0) return EXIT_FAILURE_fread_returned_zero_bytes;
     qr->used = bytes_read;
-    printf("read %i bytes as chunk\n", qr->used);
+    printf("read %zu bytes as chunk\n", qr->used);
 
     // process the chunk with libqrencode
     // FIXME
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
         off_t size;
         result = fsize(fp, &size);
         if (result != 0) exit(result);
-        printf("file size: %i\n", size);
+        printf("file size: %lli\n", size);
 
         // generate an md5 hash of the file
         md5_hash_t hash;
