@@ -1,8 +1,9 @@
-#include "fsize.h"
-#include "errors.h"
 #include <sys/stat.h> // struct stat
 
-int fsize(FILE *fp, off_t *size)
+#include "fsize.h"
+#include "errors.h"
+
+int fsize(FILE *fp, off_t *out_size)
 {
     struct stat stat_buff;
 
@@ -12,6 +13,6 @@ int fsize(FILE *fp, off_t *size)
     int result = fstat(fd, &stat_buff); 
     if (result != 0) return EXIT_FAILURE_fstat_failed;
 
-    *size = stat_buff.st_size;
+    *out_size = stat_buff.st_size;
     return 0;
 }

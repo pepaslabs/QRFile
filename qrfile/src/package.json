@@ -1,0 +1,8 @@
+{
+    "name": "qrfile",
+    "version": "0.0.1",
+    "dependencies": {
+        "pepaslabs/hexify.c": "0.0.1",
+        "pepaslabs/rhash_md5.c": "0.0.1"
+    }
+}
